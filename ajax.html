@@ -1,0 +1,311 @@
+<html>
+<head>
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css"  media="screen,projection"/>
+</head>
+<body>
+    <center>
+    <h1 id="your">Your Lists</h1>
+    <a class="btn-floating btn-large waves-effect waves-light blue" onclick="createList()" id="button" style="margin-left:500px;margin-top:-60px;"><i class="material-icons">add</i></a>
+        
+    <div class="preloader-wrapper big active" id="justhide">
+    <div class="spinner-layer spinner-blue-only">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div><div class="gap-patch">
+        <div class="circle"></div>
+      </div><div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+  </div>
+    <i class="material-icons" style="margin-left: 1000px;margin-top: -90px;position:relative;" id="search">search</i>
+    <input type="text" id="autocomplete-input" class="autocomplete" style="width:100px">
+          <label for="autocomplete-input"></label>
+   
+    <center>
+       <!--<button class="btn btn-default" onclick="createList()" id="button">Create List</button>-->
+       
+    <ul id="mainlist"> </ul>
+     <div id="form">
+            
+                <label for="Description"></label>
+                <input type="text" class="form-control" id="desc" placeholder="Enter description" name="description" style="width:500px;">
+            
+
+            
+                <label for="date"></label>
+                <input  class="datepicker" id="dateComp" placeholder="Enter Date" name="date" style="width:500px;">
+            <br>
+            <button class="btn btn-default" onclick="postIt()">Submit</button>
+    </div>
+    <div id="form2">
+            
+                <label for="Description">Name:</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter name" >
+            
+                
+            
+               <button class="btn btn-default" onclick="createListCall()">Submit</button>
+    </div>
+    <div id="form1">
+            
+                <label for="Description">Description:</label>
+                <input type="text" class="form-control" id="desc1" placeholder="Enter description" name="description1">
+            
+
+            
+                <label for="date">Date:</label>
+                <input type="date" class="form-control" id="dateComp1" placeholder="Enter Date" name="date1">
+            
+            <button class="btn btn-default" onclick="UpdateIt()">Submit</button>
+    </div>
+
+     <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script>
+        var ids,update_ids;
+        var list=[];
+        var Data={
+                                "Apple": null,
+                                "Microsoft": null,
+                                
+                                };
+        $(document).ready(function()
+        {
+            $('#form').hide();
+            
+             $('#search').hide();
+            $('#button').hide();
+                $('#form2').hide();
+                $('#form1').hide();
+           setTimeout(function(){
+                    init();
+                },3000)             
+        });
+        function init()
+        {
+             $('#button').show();
+              
+             
+              $('#search').show();
+                 $('#justhide').hide();
+                $('#form').hide();
+                $('#form2').hide();
+                $('#form1').hide();
+                $.ajax(
+                {
+                    url:"http://127.0.0.1:8000/createList/",
+                    crossDomain:true,
+                    async:false,
+                    type:"GET",
+                    success:function(result)
+                    {
+                        
+                       
+                        $.get("template.html", function(template)
+                        {
+                            $.each(result, function(i)
+                            {
+                                console.log((result[i].name))
+                                list.push(result[i].name)
+                                $.tmpl(template,result[i]).appendTo("#mainlist");
+                                getlistitems(result[i].id);
+                            });
+                            console.log(list);
+                            var jsonObj={};
+                           for (var i=0;i<list.length;i++) {
+                            
+                            // jsonObj.push({key: list[i], values: null}); 
+                                jsonObj[list[i]]=null;
+                        }
+                            console.log(list);
+                            console.log(jsonObj);
+                            $('.modal').modal();
+                            $('select').material_select();
+                            $('.datepicker').pickadate({
+                                selectMonths: true, 
+                                selectYears: 15, 
+                                format: 'yyyy-mm-dd'
+                            });
+                            $('input.autocomplete').autocomplete({
+                                data: jsonObj,
+                                limit: 20,
+                                onAutocomplete: function(val) {
+                               
+                                },
+                                minLength: 1, 
+                            });
+        
+                        });
+                    } 
+                });
+        }
+  
+    
+      function getlistitems(id)
+      {
+        $.ajax(
+        {
+            url:"http://127.0.0.1:8000/createList/"+id+"/item/",
+            crossDomain:true,
+            async:false,
+            type:"GET",
+            success:function(result)
+            {
+                $.get("template1.html", function(template)
+                {
+                    $.template("mytemplate2", template);
+                    $.each(result, function(i)
+                    {
+                        $.tmpl("mytemplate2",result[i]).appendTo("#modaladd"+id);
+                    });
+                });
+            }
+        });
+      }
+    
+    function createList()
+    {
+        $('#form2').show();
+        $('#mainlist').hide();
+    }
+    function createListCall()
+    {
+         $('#form2').hide();
+         $('#mainlist').show();
+         var name=document.getElementById('name').value;
+         $.ajax({
+                url: 'http://127.0.0.1:8000/createList/',
+                type: 'POST',
+         
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    
+                    "name": name,
+                   
+                }),
+                dataType: "json",
+                success: function(result) {
+                    console.log("created successfully")
+                }
+            });   
+             
+    }
+    function onClick(id)
+    {
+        
+                $.ajax({
+                url: 'http://127.0.0.1:8000/deleteItem/'+id+'/',
+                type: 'DELETE',
+                success: function(result) {
+                    console.log("deleted successfully")
+                }
+            });   
+ 
+    }
+    function DeleteList(id)
+    {
+        
+                $.ajax({
+                url: 'http://127.0.0.1:8000/deleteList/'+id+'/',
+                type: 'DELETE',
+                success: function(result) {
+                    console.log("deleted successfully")
+                }
+            });   
+           
+    }
+    function postIt()
+    {
+            
+            $('#form').hide();
+            $('#mainlist').show();
+            $('#your').show();
+            $('#search').show();
+            $('#button').show();
+             alert("hello"+ids);
+           var desc=document.getElementById('desc').value;
+            var date=document.getElementById('dateComp').value;
+            
+        
+            alert("hey");
+            $.ajax({
+                url: 'http://127.0.0.1:8000/createList/'+ids+'/item/',
+                type: 'POST',
+         
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    
+                    "description": desc,
+                    "iscomplete": false,
+                    "dueDate": date,
+                    "todolist": ids
+                }),
+                dataType: "json",
+                success: function(result) {
+                    console.log("created successfully")
+                }
+            });   
+            
+             
+        
+    }
+    function UpdateIt()
+    {
+            
+            $('#form1').hide();
+            $('#mainlist').show();
+             alert("hello"+ids);
+           var desc=document.getElementById('desc1').value;
+            var date=document.getElementById('dateComp1').value;
+            
+        
+            alert("hey");
+            $.ajax({
+                url: 'http://127.0.0.1:8000/createList/'+ids+'/item/',
+                type: 'POST',
+         
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    
+                    "description": desc,
+                    "iscomplete": false,
+                    "dueDate": date,
+                    "todolist": ids
+                }),
+                dataType: "json",
+                success: function(result) {
+                    console.log("updated successfully")
+                }
+            });   
+            
+    }
+     function Create(id)
+    {
+               ids=id;
+                console.log(ids);
+               $('#mainlist').hide();
+               $('#your').hide();
+               $('#button').hide();
+               $('#search').hide();
+                $('#form').show();
+    }
+    function onUpdate(id)
+    {
+            update_ids=id;
+            console.log(update_ids);
+            $('#mainlist').hide();
+            $('#form1').show();
+    }
+ 
+     </script>
+           <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+            <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+            <script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+   
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Total View</title>
+</head>
+
+<body>
+        <p hidden> @register.filter(name='zip')</p>
+        {% load app_filters %}
+
+       {%for i, j in lists|zip:items %}
+        <ul>
+            <h2>{{i.name}}</h2>
+            {% for k in j %}
+                <li>{{k}}</li>
+            {%endfor%}
+            </ul>
+    {%endfor %}
+
+
+</body>
+</html>

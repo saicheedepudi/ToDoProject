@@ -1,0 +1,137 @@
+<html>
+<head>
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css"  media="screen,projection"/>
+</head>
+<body>
+    <center>
+    <h1>Your Lists</h1>
+    <center>
+
+    <ul id="mainlist"> </ul>
+     <form id="form">
+            <div class="form-group">
+                <label for="Description">Description:</label>
+                <input type="text" class="form-control" id="desc" placeholder="Enter description" name="description">
+            </div>
+
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" class="form-control" id="dateComp" placeholder="Enter Date" name="date">
+            </div>
+            <button  class="btn btn-default" onclick="postIt()">Submit</button>
+    </form>
+
+     <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+        var ids;
+        $(document).ready(function()
+    {
+        $('#form').hide();
+
+      $.ajax(
+      {
+          url:"http://127.0.0.1:8000/createList/",
+          crossDomain:true,
+          async:false,
+          type:"GET",
+          success:function(result)
+          {
+
+              console.log(result);
+              $.get("template.html", function(template)
+              {
+                  $.each(result, function(i)
+                  {
+
+                      $.tmpl(template,result[i]).appendTo("#mainlist");
+                      getlistitems(result[i].id);
+                  });
+                  $('.modal').modal();
+              });
+          }
+      });
+
+      function getlistitems(id)
+      {
+
+        $.ajax(
+        {
+            url:"http://127.0.0.1:8000/createList/"+id+"/item/",
+            crossDomain:true,
+            async:false,
+            type:"GET",
+            success:function(result)
+            {
+                $.get("template1.html", function(template)
+                {
+                    $.template("mytemplate2", template);
+                    $.each(result, function(i)
+                    {
+                        $.tmpl("mytemplate2",result[i]).appendTo("#modaladd"+id);
+                    });
+                });
+            }
+        });
+      }
+    });
+    function onClick(id)
+    {
+
+                $.ajax({
+                url: 'http://127.0.0.1:8000/deleteItem/'+id+'/',
+                type: 'DELETE',
+                success: function(result) {
+                    console.log("deleted successfully")
+                }
+            });
+
+    }
+    function postIt()
+    {
+            $('#form').hide();
+            $('#mainlist').show();
+            alert("hey");
+
+            var desc=document.getElementById('desc').value;
+            alert("hello");
+            var date=document.getElementById('dateComp').value;
+             alert("hello");
+            var myData={'description':desc,'iscomplete':False,'dueDate':date,'todolist':ids};
+            alert(myData);
+            $.ajax({
+                url: 'http://127.0.0.1:8000/createList/'+ids+'/item/',
+                type: 'POST',
+                data: myData,
+                dataType: "json",
+                success: function(result) {
+                    console.log("created successfully")
+                }
+            });
+
+            jQuery.post('http://127.0.0.1:8000/createList/'+ids+'/item/',myData,function(result){
+                console.log("created successfully");
+            });
+
+    }
+     function Create(id)
+    {
+                var ids=id;
+                console.log(ids);
+               $('#mainlist').hide();
+                $('#form').show();
+
+
+    }
+
+
+     </script>
+           <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+            <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+            <script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+
+</body>
+</html>

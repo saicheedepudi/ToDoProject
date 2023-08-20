@@ -1,0 +1,16 @@
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<li>
+<a class="waves-effect waves-light btn" href="#modal${id}" id=${id} style="width:150px;">${name}</a>
+
+<div id="modal${id}" class="modal" >
+    <div class="modal-content" id="modaladd${id}" >
+    <center><h4 ><u >${name}</u></h4></center>
+    <button type="button" class="btn btn-default" style="width:150px;"  value="${id}" onclick="Create(this.value)">Create Item</button>
+    <!--<p align=left>Date:-${date}</p>-->
+    </div>
+
+</div>
+</li>
+
+<br>

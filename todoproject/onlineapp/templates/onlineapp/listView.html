@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Lists</title>
+
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+    @import url(http://weloveiconfonts.com/api/?family=entypo);
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+        .container{
+        font-family:'entypo';
+        font-weight:bold;
+        font-size:20px;
+        }
+        body
+        {
+            background-color:black;
+        }
+        .btn-default {
+              background: #000;
+              color: #fff;
+        }
+        .btn-default:hover {
+          background: #fff;
+          color: #000;
+        }
+    </style>
+</head>
+
+
+<body>
+
+<p hidden> @register.filter(name='zip')</p>
+<div class="container">
+ <h2 style="color:white;">Your To Do Lists</h2>
+  <ul class="list-group" >
+
+        {% for list in lists %}
+
+                <li> <div class="list-group-item"><a class="waves-effect waves-light btn" href="#modal1"> {{list.name}} </a></div></li>
+
+                <div id="modal1" class="modal">
+                <div class="modal-content">
+
+                    {% for k in items %}
+
+                        <p>{{k.description}}</p>
+
+
+                {%endfor %}
+      </div>
+
+    </div>
+      {% endfor %}
+
+    </ul>
+
+</div>
+
+<button type="button" onclick="location.href ='http://127.0.0.1:8000/online/createlist/';" class="btn btn-default" style="margin-left:900px;">Create List</button>
+<button type="button" class="btn btn-default"  onclick="location.href ='http://127.0.0.1:8000/online/dellist/';">Delete List</button>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+<script>
+    $(document).ready(function(){
+
+    $('.modal').modal();
+  });
+</script>
+</body>
+</html>

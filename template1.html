@@ -1,0 +1,25 @@
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css"  media="screen,projection"/>
+<body>
+    <br>
+    <br>
+    <br>
+<input type="checkbox" id=${id} />
+
+<label for=${id} >${description} </label>
+
+ <button type="button" class="btn btn-default" style="width:100px; margin-left:200px;" value="${id}" onclick="onClick(this.value)">Delete</button>
+ <button type="button" class="btn btn-default" style="width:100px;"  value="${id}" onclick="onUpdate(this.value)">Update</button>
+ 
+  
+ <script>
+ $(document).ready(function() {
+
+    $('select').material_select();
+  });
+  
+  
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+  </body>          

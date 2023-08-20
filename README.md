@@ -1,2 +1,2 @@
-# To-do-list
-A todolist app using django framework
+# To-do-Project
+An app for to-do lists using django framework.
